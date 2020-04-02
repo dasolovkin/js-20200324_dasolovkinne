@@ -3,8 +3,6 @@
  * @param {Array} sourceArray 
  * @returns {Array} 
  */
-export function uniq(sourceArray) {  
-    sourceArray = sourceArray || [];
-    
+export function uniq(sourceArray = []) {          
     return Array.from(new Set(sourceArray)); 
 }

@@ -4,10 +4,8 @@
  * @param {Number} lettersCount
  * @returns {String} 
  */
-export function trimSymbols(sourceStr, lettersCount) {     
-  sourceStr = sourceStr || "";
-
-  if (+lettersCount != lettersCount){
+export function trimSymbols(sourceStr, lettersCount) {       
+  if (lettersCount == undefined){
       return sourceStr;
   }
   

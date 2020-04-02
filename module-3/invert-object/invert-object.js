@@ -3,12 +3,8 @@
  * @param {Object} value
  * @returns {Object}
  */
-export function invertObj(obj) {
-    if (!obj){
-        return obj;
-    }
-
-    return Object.fromEntries(   
-        Object.entries(obj).map(([key, value]) => [value, key])
-    );    
+export function invertObj(obj) {    
+    return obj
+        ? Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]))
+        : obj;    
 }
