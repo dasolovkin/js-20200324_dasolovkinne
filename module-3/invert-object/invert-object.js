@@ -8,12 +8,7 @@ export function invertObj(obj) {
         return obj;
     }
 
-    let result = Object.create(null);
-    
-    for(let objItem in obj){
-        let newName = obj[objItem];
-        result[newName] = objItem;
-    }  
-    
-    return result;
+    return Object.fromEntries(   
+        Object.entries(obj).map(([key, value]) => [value, key])
+    );    
 }
