@@ -1,7 +1,12 @@
+let tempNotification;
+
 export default class NotificationMessage {
     element;
 
-    constructor(message, {duration, type = 'success', onlyOne = true} = {}){
+    constructor(message, {duration, type = 'success', onlyOne = true} = {}){ 
+        if (tempNotification){
+            tempNotification.remove();
+        }      
         this.message = message;
         this.duration = duration;
         this.type = type;
@@ -12,7 +17,7 @@ export default class NotificationMessage {
 
     get template () {
         return `
-        <div class="notification ${this.type}" style="--value:${this.duration}s">
+        <div class="notification ${this.type}" style="--value:${this.duration / 1000}s">
             <div class="timer"></div>
             <div class="inner-wrapper">
             <div class="notification-header">${this.type}</div>
@@ -22,13 +27,8 @@ export default class NotificationMessage {
         `;
     }
 
-    show(parentElement) {            
-        if (this.onlyOne) {
-            //Удаляем все предыдущие
-            for (let notificationElement of document.body.querySelectorAll('div.notification')){
-                notificationElement.remove();
-            }
-        }
+    show(parentElement) {   
+        tempNotification = this;
 
         //Добавляем новое
         (parentElement || document.body).append(this.element);
