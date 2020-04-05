@@ -3,14 +3,13 @@ let tempNotification;
 export default class NotificationMessage {
     element;
 
-    constructor(message, {duration, type = 'success', onlyOne = true} = {}){ 
+    constructor(message, {duration, type = 'success'} = {}){ 
         if (tempNotification){
             tempNotification.remove();
         }      
         this.message = message;
         this.duration = duration;
-        this.type = type;
-        this.onlyOne = onlyOne;                
+        this.type = type;                      
 
         this.render();
     }
