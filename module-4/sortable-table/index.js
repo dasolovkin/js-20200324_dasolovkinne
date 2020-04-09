@@ -14,13 +14,11 @@ export default class SortableTable {
   }
     
   sortData(field, order) {
-    let header = this.headersConfig.find(function(item){
-      return item.id === field;
-    });
-    let direction = order == 'asc' ? 1 : -1;
+    const { sortType } = this.headersConfig.find(item => item.id === field);
+    let direction = order === 'asc' ? 1 : -1;
 
     return this.data.sort(function(a, b){
-      switch(header.sortType){
+      switch(sortType){
         case 'number':
             return direction * (a[field] - b[field]);            
           case 'string': 
@@ -31,18 +29,18 @@ export default class SortableTable {
     });
   }    
  
-  getTableHeader() {
-    let headerItemsHTML = '';
-    for(let headersConfigItem of this.headersConfig){
-      headerItemsHTML += `        
-        <div class="sortable-table__cell" data-id="${headersConfigItem.id}" data-sortable="${headersConfigItem.sortable}">
-          <span>${headersConfigItem.title}</span>         
-        </div>`;
-    }
+  getTableHeaderRows(field, order) {
+    return this.headersConfig.map(headersConfigItem => `        
+        <div class="sortable-table__cell" data-id="${headersConfigItem.id}" data-sortable="${headersConfigItem.sortable}" data-order="${field == headersConfigItem.id ? order : ''}">
+          <span>${headersConfigItem.title}</span> 
+          ${field == headersConfigItem.id ? '<span data-element="arrow" class="sortable-table__sort-arrow"><span class="sort-arrow"></span></span>' : ''} 
+        </div>`).join('');    
+  }
 
+  getTableHeader(field, order) {    
     return `
       <div data-element="header" class="sortable-table__header sortable-table__row">
-        ${headerItemsHTML}        
+        ${this.getTableHeaderRows(field, order)}        
       </div>`;
   }
  
@@ -50,26 +48,21 @@ export default class SortableTable {
      let dataItemHTML = this.headersConfig.map(function(item){
       return item.template
         ? item.template(dataItem[item.id])
-        : `<div class="sortable-table__cell">${dataItem[item.id]}</div>`;
-    }).join(""); 
+        : `<div class="sortable-table__cell">${dataItem[item.id]}</div>`;}).join(""); 
 
     return `<a href="/products/${dataItem.id}" class="sortable-table__row">${dataItemHTML}</a>`;    
   }
 
-  getTableRows(data){
+  getTableBody(data){
     return data.map(item => this.getTableRow(item)).join("");         
-  }
-
-  getTableBody(data = this.data){
-    return this.getTableRows(data);
-  }
+  }  
 
   getTable() {
     return `
       <div class="sortable-table">    
         ${this.getTableHeader()}
         <div data-element="body" class="sortable-table__body">
-          ${this.getTableBody()} 
+          ${this.getTableBody(this.data)} 
         </div>               
       </div>`;
   } 
@@ -89,21 +82,8 @@ export default class SortableTable {
   }
   
   sort (field, order) {    
-    let sortData = this.sortData(field, order);   
-    
-    //Удаляем аттрибуты созтировки у всех заголовков
-    this.element.querySelectorAll(".sortable-table__cell[data-id]").forEach(function(item){
-      item.dataset.order =  "";
-      let arrowElement = item.querySelector('span.sortable-table__sort-arrow');
-      if (arrowElement){
-        arrowElement.remove();
-      }
-    });
-
-    //Добавляем аттрибуты сортировки к сортируемому заголовку
-    let sortFileldElement = this.element.querySelector(`.sortable-table__cell[data-id="${field}"]`);
-    sortFileldElement.setAttribute('data-order', order); 
-    sortFileldElement.insertAdjacentHTML('beforeend', '<span data-element="arrow" class="sortable-table__sort-arrow"><span class="sort-arrow"></span></span>');
+    let sortData = this.sortData(field, order);           
+    this.subElements.header.innerHTML = this.getTableHeaderRows(field, order);
     this.subElements.body.innerHTML = this.getTableBody(sortData);
   }   
  
