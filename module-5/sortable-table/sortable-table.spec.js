@@ -73,6 +73,54 @@ describe("SortableTable", () => {
     expect(sortableTable.element).toBeInTheDocument();
   });
 
+  it("should have default sorting", () => {
+    const columns = sortableTable.element.querySelectorAll(`.sortable-table__cell[data-id]`);
+    const isSortingExists = [...columns].some(column => column.dataset.order);
+
+    expect(isSortingExists).toBeTruthy();
+  });  
+
+  it("should sort correctly for colomn 'title'", () => {
+    const field = 'title';
+    const sortingHeader = sortableTable.element.querySelector(`.sortable-table__cell[data-id="${field}"]`);
+    let event = new Event("click", {bubbles: true});
+    sortingHeader.dispatchEvent(event);    
+
+    const cellIndex = header.findIndex(obj => obj.id === field);
+    const { body } = sortableTable.subElements;
+    const firstRow = body.firstElementChild;
+    const lastRow = body.lastElementChild;
+
+    if (sortableTable.sorted.order === 'asc'){
+      expect(firstRow.children[cellIndex].textContent).toEqual('Детский велосипед Lexus Trike Racer Trike');
+      expect(lastRow.children[cellIndex].textContent).toEqual('Powerbank аккумулятор Hiper SP20000');
+    } else {
+      expect(firstRow.children[cellIndex].textContent).toEqual('Powerbank аккумулятор Hiper SP20000');
+      expect(lastRow.children[cellIndex].textContent).toEqual('Детский велосипед Lexus Trike Racer Trike');
+    }    
+  });
+
+  it("should sort correctly for colomn 'price'", () => {
+    const field = 'price';
+    const sortingHeader = sortableTable.element.querySelector(`.sortable-table__cell[data-id="${field}"]`);
+
+    let event = new Event("click", {bubbles: true});
+    sortingHeader.dispatchEvent(event);    
+
+    const cellIndex = header.findIndex(obj => obj.id === field);
+    const { body } = sortableTable.subElements;
+    const firstRow = body.firstElementChild;
+    const lastRow = body.lastElementChild;
+
+    if (sortableTable.sorted.order === 'asc'){
+      expect(firstRow.children[cellIndex].textContent).toEqual('3');
+      expect(lastRow.children[cellIndex].textContent).toEqual('53');
+    } else {
+      expect(firstRow.children[cellIndex].textContent).toEqual('53');
+      expect(lastRow.children[cellIndex].textContent).toEqual('3');
+    }    
+  });
+
   it('should have ability to be destroyed', () => {
     sortableTable.destroy();
 
