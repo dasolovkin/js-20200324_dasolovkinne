@@ -19,16 +19,18 @@ export default class SortableTable {
   }
   
   sortData() {
-    const { sortType } = this.headersConfig.find(item => item.id === this.sorted.id);
+    const { sortType, customSorting }  = this.headersConfig.find(item => item.id === this.sorted.id);
     let direction = this.sorted.order === 'asc' ? 1 : -1;
 
     return this.data.sort((a, b) => {
       switch(sortType){
         case 'number':
             return direction * (a[this.sorted.id] - b[this.sorted.id]);            
-          case 'string': 
-          return direction * a[this.sorted.id].localeCompare(b[this.sorted.id], 'ru');
-          default:
+        case 'string': 
+            return direction * a[this.sorted.id].localeCompare(b[this.sorted.id], 'ru');
+        case 'custom':
+            return direction * customSorting(a[this.sorted.id], b[this.sorted.id]);
+        default:
             return direction * (a[this.sorted.id] - b[this.sorted.id]);         
       }
     });
