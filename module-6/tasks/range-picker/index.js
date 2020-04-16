@@ -11,10 +11,7 @@ export default class RangePicker {
     to = new Date()} = {}
   ) { 
     this.showDateFrom = new Date(from);
-    this.selected = {
-      from: new Date(from.getFullYear(), from.getMonth(), from.getDate()), 
-      to: new Date(to.getFullYear(), to.getMonth(), to.getDate())
-    };        
+    this.selected = { from, to };        
 
     this.render();
   }
@@ -45,7 +42,7 @@ export default class RangePicker {
     </div>`;
   }
 
-  renderSelector(){
+  renderSelector(){    
     this.subElements.selector.innerHTML = `
     <div class="rangepicker__selector-arrow"></div>
     <div class="rangepicker__selector-control-left"></div>
