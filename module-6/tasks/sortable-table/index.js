@@ -87,6 +87,7 @@ export default class SortableTable {
   getSubElements(paentElement){
     return [...paentElement.querySelectorAll("[data-element]")].reduce(function(previousValue, item){
       previousValue[item.dataset.element] = item;
+
       return previousValue;
     }, {});
   }
@@ -104,11 +105,9 @@ export default class SortableTable {
   renderRows (data) {
     this.data = data;
 
-    if (this.data.length > 0){
-      this.element.classList.remove("sortable-table_empty");     
-    } else {
-      this.element.classList.add("sortable-table_empty");
-    }
+    this.data.length > 0
+      ? this.element.classList.remove("sortable-table_empty")
+      : this.element.classList.add("sortable-table_empty");    
 
     this.subElements.body.innerHTML = this.getTableBody(this.data);
   }
