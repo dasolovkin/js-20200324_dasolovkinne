@@ -185,3 +185,8 @@
   }
 }
 
+/*
+https://course-js.javascript.ru/api/rest/products?_sort=price&_order=asc&_start=1&_end=31
+https://course-js.javascript.ru/api/rest/products?_sort=price&_order=asc&_start=31&_end=61
+https://course-js.javascript.ru/api/rest/products?_sort=price&_order=asc&_start=61&_end=91
+*/
