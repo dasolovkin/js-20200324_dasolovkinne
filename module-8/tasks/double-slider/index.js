@@ -91,7 +91,7 @@ export default class DoubleSlider {
     this.subElements.from.innerHTML = this.formatValue(this.getSelectedValues().from);
   }
 
-  onDraggingThumbRight () {
+  onDraggingThumbRight = event => {
     let rect = this.subElements.inner.getBoundingClientRect();
 
     let position = (rect.right - event.clientX - this.shiftX) / this.subElements.inner.offsetWidth;
