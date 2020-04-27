@@ -1,8 +1,9 @@
 export default class SortableList {
   element;  
 
-  constructor({ items = [] } = {}) {
+  constructor({ element, items = [] } = {}) {
     this.items = items;
+    this.element = element;
 
     this.render();
 
@@ -11,8 +12,10 @@ export default class SortableList {
   }
 
   render() {   
-    this.element = document.createElement("ul");
-    this.element.className = "sortable-list";
+    if (!this.element){
+      this.element = document.createElement("ul");
+      this.element.className = "sortable-list";
+    }
 
     for (let item of this.items){
       item.classList.add("sortable-list__item");

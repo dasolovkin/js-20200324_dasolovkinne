@@ -70,7 +70,13 @@ export default class ProductFormComponent {
     });        
   }
 
-  getImageItem (src, alt) {
+  getImageItem(src, alt) {
+    let newImageElement = document.createElement("div");
+    newImageElement.innerHTML = this.getImageItemTemplate(src, alt);
+    return newImageElement.firstElementChild;
+  }
+
+  getImageItemTemplate (src, alt) {
     return `
     <li class="products-edit__imagelist-item sortable-list__item">        
       <span>
@@ -94,10 +100,6 @@ export default class ProductFormComponent {
     });
     
     return divElement.firstElementChild.outerHTML;
-  }
-
-  get renderImagelistItems() {
-    return this.formData.images.map(item => this.getImageItem (item.url, item.name)).join('');
   }
   
   get renderSubcategories () {  
@@ -125,8 +127,7 @@ export default class ProductFormComponent {
         <div class="form-group form-group__wide" data-element="sortable-list-container">
           <label class="form-label">Фото</label>
           <div data-element="sortable-list-container">
-            <ul data-element="imageListContainer" class="sortable-list">
-              ${this.renderImagelistItems}              
+            <ul data-element="imageListContainer" class="sortable-list">                       
             </ul>
           </div>
           <div data-element="fileInputList"></div>
@@ -166,12 +167,14 @@ export default class ProductFormComponent {
 
   render () {    
     const element = document.createElement('div');
-
     element.innerHTML = this.template;
-
+           
     this.element = element.firstElementChild;
     this.subElements = this.getSubElements(element);
 
+    const sortableList = new SortableList({ element: this.subElements.imageListContainer, items: this.formData.images.map(item => this.getImageItem (item.url, item.name))});    
+    this.subElements.imageListContainer.innerHTML = sortableList.element.innerHTML;
+    
     this.fillSubcategories(); 
     this.initEventListeners();
   }
@@ -212,10 +215,8 @@ export default class ProductFormComponent {
   async upLoaderChange(file) {
     let uploader = new ImageUploader();
     let result = await uploader.upload(file);
-
-    let newImageElement = document.createElement("div");
-    newImageElement.innerHTML = this.getImageItem(result.data.link, file.name);
-    this.subElements.imageListContainer.append(newImageElement.firstElementChild);        
+    
+    this.subElements.imageListContainer.append(this.getImageItem(result.data.link, file.name));        
   }
 
   uploadImage = () => {            
